@@ -118,6 +118,55 @@ namespace banknote.Controllers
             return View(person);
         }
 
+
+
+
+
+
+        //// GET: Person/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null || _context.Person == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var person = await _context.Person
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (person == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(person);
+        //}
+
+        //// POST: Person/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (_context.Person == null)
+        //    {
+        //        return Problem("Entity set 'ApplicationDbContext.Person'  is null.");
+        //    }
+        //    //var person = await _context.Person.FindAsync(id);
+        //    var person = await _context.Person.Include(r => r.ResearvedNotes).AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+        //    if (person != null)
+        //    {
+        //        _context.Person.Remove(person);
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+
+
+
+
+
+
         // GET: Person/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -145,15 +194,32 @@ namespace banknote.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Person'  is null.");
             }
-            var person = await _context.Person.FindAsync(id);
+
+            var person = await _context.Person.Include(r => r.ResearvedNotes).AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+
             if (person != null)
             {
+                if (person.ResearvedNotes != null)
+                {
+                    foreach (var note in person.ResearvedNotes)
+                    {
+                        DeleteNoteConfirm(note.Id, note.NoteId);
+                    }
+
+                    person.ResearvedNotes = null;
+                }
+
                 _context.Person.Remove(person);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
 
 
 
@@ -245,8 +311,8 @@ namespace banknote.Controllers
                 return NotFound();
             }
 
-            //var note = await _context.Note.FirstOrDefaultAsync(m => m.Id == id);
             var note = await _context.Note.Where(i => i.Id == Id).FirstOrDefaultAsync(m => m.NoteId == NoteId);
+            
             if (note == null)
             {
                 return NotFound();
@@ -264,7 +330,7 @@ namespace banknote.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Note'  is null.");
             }
-            //var note = await _context.Note.FindAsync(id);
+
             var note = await _context.Note.Where(i => i.Id == Id).FirstOrDefaultAsync(m => m.NoteId == NoteId);
             if (note != null)
             {
@@ -272,7 +338,6 @@ namespace banknote.Controllers
             }
 
             await _context.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
             return RedirectToAction("Details", "Person", new { Id });
         }
 
@@ -381,6 +446,19 @@ namespace banknote.Controllers
 
 
 
+
+
+
+
+
+        public async void DeleteNoteConfirm(int Id, int NoteId)
+        {
+            var not = await _context.Note.Where(i => i.Id == Id).FirstOrDefaultAsync(m => m.NoteId == NoteId);
+            if (not != null)
+            {
+                _context.Note.Remove(not);
+            }
+        }
 
 
 

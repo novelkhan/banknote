@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using banknote.Data;
 using banknote.Models;
+using System.Threading;
 
 namespace banknote.Controllers
 {
@@ -203,7 +204,11 @@ namespace banknote.Controllers
                 {
                     foreach (var note in person.ResearvedNotes)
                     {
-                        DeleteNoteConfirm(note.Id, note.NoteId);
+                        var note2 = await _context.Note.FindAsync(note.NoteId);
+                        if (note2 != null)
+                        {
+                            _context.Note.Remove(note2);
+                        }
                     }
 
                     person.ResearvedNotes = null;
@@ -450,15 +455,6 @@ namespace banknote.Controllers
 
 
 
-
-        public async void DeleteNoteConfirm(int Id, int NoteId)
-        {
-            var not = await _context.Note.Where(i => i.Id == Id).FirstOrDefaultAsync(m => m.NoteId == NoteId);
-            if (not != null)
-            {
-                _context.Note.Remove(not);
-            }
-        }
 
 
 

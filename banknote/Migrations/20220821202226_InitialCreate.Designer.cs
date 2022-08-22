@@ -12,7 +12,7 @@ using banknote.Data;
 namespace banknote.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220812213535_InitialCreate")]
+    [Migration("20220821202226_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

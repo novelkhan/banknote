@@ -449,7 +449,12 @@ namespace banknote.Controllers
 
 
 
-
+        public async Task<IActionResult> AllNotes()
+        {
+            return _context.Note != null ?
+                        View(await _context.Note.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Note'  is null.");
+        }
 
 
 

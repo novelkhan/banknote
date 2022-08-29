@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using banknote.Data;
 using banknote.Models;
 using System.Threading;
+using System.Dynamic;
 
 namespace banknote.Controllers
 {
@@ -456,6 +457,17 @@ namespace banknote.Controllers
                         Problem("Entity set 'ApplicationDbContext.Note'  is null.");
         }
 
+
+
+        //public async Task<IActionResult> AllNotes()
+        //{
+        //    dynamic dm = new ExpandoObject();
+        //    dm.note = _context.Note.ToListAsync();
+        //    dm.person = _context.Person.ToListAsync();
+        //    return _context.Note != null ?
+        //                View(dm) :
+        //                Problem("Entity set 'ApplicationDbContext.Note'  is null.");
+        //}
 
 
 

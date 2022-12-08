@@ -457,21 +457,61 @@ namespace banknote.Controllers
                         Problem("Entity set 'ApplicationDbContext.Note'  is null.");
         }
 
+        //------------------------------------Partial View--------------------------------------
 
-
-        //public async Task<IActionResult> AllNotes()
+        //public ActionResult PartialView()
         //{
-        //    dynamic dm = new ExpandoObject();
-        //    dm.note = _context.Note.ToListAsync();
-        //    dm.person = _context.Person.ToListAsync();
-        //    return _context.Note != null ?
-        //                View(dm) :
-        //                Problem("Entity set 'ApplicationDbContext.Note'  is null.");
+        //    ViewBag.Message = "Welcome to my demo!";
+        //    return View();
+        //}
+
+
+        //public PartialViewResult RenderPerson()
+        //{
+        //    return PartialView(GetPerson(Id));
         //}
 
 
 
 
+        //public async Task<IActionResult> GetPerson(int? id)
+        //{
+        //    if (id == null || _context.Person == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var person = await _context.Person.FirstOrDefaultAsync(m => m.Id == id);
+        //    //var person = await _context.Person.Include(r => r.ResearvedNotes).AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+        //    if (person == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(person);
+        //}
+
+        //------------------------------------Partial View----------------------------------------
+
+
+
+
+        public async Task<IActionResult> GetPerson(int? id)
+        {
+            if (id == null || _context.Person == null)
+            {
+                return NotFound();
+            }
+
+            var person = await _context.Person.FirstOrDefaultAsync(m => m.Id == id);
+            //var person = await _context.Person.Include(r => r.ResearvedNotes).AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return View(person);
+        }
 
 
 

@@ -9,6 +9,7 @@ using banknote.Data;
 using banknote.Models;
 using System.Threading;
 using System.Dynamic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace banknote.Controllers
 {
@@ -449,7 +450,7 @@ namespace banknote.Controllers
 
 
 
-
+        [Authorize]
         public async Task<IActionResult> AllNotes()
         {
             return _context.Note != null ?

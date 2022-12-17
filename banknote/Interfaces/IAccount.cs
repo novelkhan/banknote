@@ -8,5 +8,7 @@ namespace banknote.Interfaces
         public Task<IdentityResult> CreateUserAsync(SignUpUserModel userModel);
         public Task<SignInResult> PasswordSignInAsync(SignInModel signInModel);
         public Task SignOutAsync();
+        public Task<IdentityResult> ChangePasswordAsync(ChangePasswordModel model);
+        //public void DefaultRoles();
     }
 }

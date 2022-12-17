@@ -1,5 +1,6 @@
 ﻿using banknote.Interfaces;
 using banknote.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace banknote.Controllers
@@ -35,7 +36,12 @@ namespace banknote.Controllers
 
                     return View(userModel);
                 }
+                
 
+                //if(userModel.Email == "nkhan3717@gmail.com")
+                //{
+                //    _accountRepository.DefaultRoles();
+                //}
 
                 ModelState.Clear();
                 TempData["AlertMsg"] = "Record has been succesfully saved";
@@ -108,6 +114,46 @@ namespace banknote.Controllers
         {
             await _accountRepository.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+
+
+
+        [Route("change-password")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _accountRepository.ChangePasswordAsync(model);
+                if (result.Succeeded)
+                {
+                    ViewBag.IsSuccess = true;
+                    ModelState.Clear();
+                    return View();
+                }
+
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

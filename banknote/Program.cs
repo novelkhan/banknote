@@ -3,6 +3,7 @@ using banknote.Helpers;
 using banknote.Interfaces;
 using banknote.Models;
 using banknote.Repositories;
+using banknote.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,8 +36,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 //.AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IAccount, AccountRepository>();
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+
+builder.Services.AddScoped<IAccount, AccountRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

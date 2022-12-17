@@ -1,7 +1,9 @@
 ﻿using banknote.Interfaces;
 using banknote.Models;
+using banknote.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace banknote.Repositories
@@ -10,10 +12,14 @@ namespace banknote.Repositories
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
+        public AccountRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager,IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+            _userService = userService;
         }
 
         public async Task<IdentityResult> CreateUserAsync(SignUpUserModel userModel)
@@ -48,5 +54,21 @@ namespace banknote.Repositories
         {
             await _signInManager.SignOutAsync();
         }
+
+
+        public async Task<IdentityResult> ChangePasswordAsync(ChangePasswordModel model)
+        {
+            var userId = _userService.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+        }
+
+        //public async void DefaultRoles()
+        //{
+        //    var user = await _userManager.FindByEmailAsync("nkhan3717@gmail.com");
+        //    var result = await _userManager.AddToRoleAsync(user, "Admin");
+        //    if (result.Succeeded) {}
+        //}
     }
 }

@@ -12,8 +12,8 @@ using banknote.Data;
 namespace banknote.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221209195630_addedApplicationUser")]
-    partial class addedApplicationUser
+    [Migration("20221216233516_User")]
+    partial class User
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -234,35 +234,7 @@ namespace banknote.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("banknote.Models.Note", b =>
-                {
-                    b.Property<int>("NoteId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NoteId"));
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NoteName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NoteValue")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PersonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("NoteId");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("Note");
-                });
-
-            modelBuilder.Entity("banknote.Models.Person", b =>
+            modelBuilder.Entity("banknote.Models.Picture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -270,13 +242,33 @@ namespace banknote.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("PictureName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Person");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("pictures");
+                });
+
+            modelBuilder.Entity("banknote.Models.User", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -330,16 +322,18 @@ namespace banknote.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("banknote.Models.Note", b =>
+            modelBuilder.Entity("banknote.Models.Picture", b =>
                 {
-                    b.HasOne("banknote.Models.Person", null)
-                        .WithMany("ResearvedNotes")
-                        .HasForeignKey("PersonId");
+                    b.HasOne("banknote.Models.User", null)
+                        .WithMany("Pictures")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("banknote.Models.Person", b =>
+            modelBuilder.Entity("banknote.Models.User", b =>
                 {
-                    b.Navigation("ResearvedNotes");
+                    b.Navigation("Pictures");
                 });
 #pragma warning restore 612, 618
         }

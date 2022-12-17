@@ -3,3 +3,6 @@
                    2. Authentication
                    3. View Component
                    4. Etc.
+
+
+# The application is deployed on:   https://banknote.azurewebsites.net

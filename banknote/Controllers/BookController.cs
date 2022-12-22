@@ -45,13 +45,7 @@ namespace banknote.Controllers
             {
                 if (bookModel.CoverPhoto != null)
                 {
-                    string folder = "books/cover/";
-                    folder +=  Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
-                    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
-
-                    bookModel.CoverImageUrl = "/" + folder;
-
-                    await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                    await UploadImage(bookModel);
                 }
 
                 int id = await _bookRepository.AddNewBook(bookModel);
@@ -67,7 +61,16 @@ namespace banknote.Controllers
             return View();
         }
 
+        private async Task UploadImage(BookModel bookModel)
+        {
+            string folder = "books/cover/";
+            folder += Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
 
+            bookModel.CoverImageUrl = "/" + folder;
+
+            await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+        }
 
         [Route("all-books")]
         public async Task<ViewResult> GetAllBooks()

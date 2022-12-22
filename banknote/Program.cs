@@ -3,6 +3,7 @@ using banknote.Helpers;
 using banknote.Interfaces;
 using banknote.Models;
 using banknote.Repositories;
+using banknote.Repository;
 using banknote.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,8 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, Applica
 
 builder.Services.AddScoped<IAccount, AccountRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ILanguageRepository, LanguageRepository>();
 
 var app = builder.Build();
 

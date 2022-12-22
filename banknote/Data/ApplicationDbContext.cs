@@ -15,5 +15,7 @@ namespace banknote.Data
 
         public DbSet<banknote.Models.User>? Users { get; set; }
         public DbSet<banknote.Models.Picture>? Pictures { get; set; }
+        public DbSet<banknote.Data.Books> Books { get; set; }
+        public DbSet<banknote.Data.Language> Language { get; set; }
     }
 }

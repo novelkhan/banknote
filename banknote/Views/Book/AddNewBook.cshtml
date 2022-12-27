@@ -11,9 +11,7 @@
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>Congratulations</strong> You have added new book successfully. <br />
             Click <a asp-controller="Book" asp-action="GetBook" asp-route-id="@ViewBag.BookId">here</a> to view the details
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
@@ -74,14 +72,14 @@
             <span asp-validation-for="CoverPhoto" class="text-danger"></span>
         </div>
 
-        @*<div class="form-group">
+        <div class="form-group">
             <label asp-for="GalleryFiles" class="control-label"></label>
             <div class="custom-file">
                 <input asp-for="GalleryFiles" class="custom-file-input" id="customFile">
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
             <span asp-validation-for="GalleryFiles" class="text-danger"></span>
-        </div>*@
+        </div>
 
         @*<div class="form-group">
             <label asp-for="BookPdf" class="control-label"></label>

@@ -32,16 +32,16 @@ namespace banknote.Repositories
                 //BookPdfUrl = model.BookPdfUrl
             };
 
-            //newBook.bookGallery = new List<BookGallery>();
+            newBook.bookGallery = new List<BookGallery>();
 
-            //foreach (var file in model.Gallery)
-            //{
-            //    newBook.bookGallery.Add(new BookGallery()
-            //    {
-            //        Name = file.Name,
-            //        URL = file.URL
-            //    });
-            //}
+            foreach (var file in model.Gallery)
+            {
+                newBook.bookGallery.Add(new BookGallery()
+                {
+                    Name = file.Name,
+                    URL = file.URL
+                });
+            }
 
             await _context.Books.AddAsync(newBook);
             await _context.SaveChangesAsync();
@@ -151,6 +151,7 @@ namespace banknote.Repositories
 
             //return null;
 
+            #pragma warning disable CS8603 // Possible null reference return.
             return await _context.Books.Where(x => x.Id == id)
                 .Select(book => new BookModel()
                 {
@@ -162,8 +163,15 @@ namespace banknote.Repositories
                     LanguageId = book.LanguageId,
                     Language = book.Language.Name,
                     TotalPages = book.TotalPages,
-                    CoverImageUrl = book.CoverImageUrl
+                    CoverImageUrl = book.CoverImageUrl,
+                    Gallery = book.bookGallery.Select(g => new GalleryModel()
+                    {
+                        Id = g.Id,
+                        Name = g.Name,
+                        URL= g.URL
+                    }).ToList()
                 }).FirstOrDefaultAsync();
+                #pragma warning restore CS8603 // Possible null reference return.
         }
 
         public List<BookModel> SearchBook(string title, string authorName)

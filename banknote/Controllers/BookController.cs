@@ -40,13 +40,68 @@ namespace banknote.Controllers
             ModelState.Remove(nameof(bookModel.Category));
             ModelState.Remove(nameof(bookModel.Language));
             ModelState.Remove(nameof(bookModel.CoverImageUrl));
+            ModelState.Remove(nameof(bookModel.Gallery));
+
+
+            //if (ModelState.IsValid)
+            //{
+            //    //go on as normal
+            //}
+            //else
+            //{
+            //    var errors = ModelState.Select(x => x.Value.Errors)
+            //                           .Where(y => y.Count > 0)
+            //                           .ToList();
+            //}
 
             if (ModelState.IsValid)
             {
                 if (bookModel.CoverPhoto != null)
                 {
-                    await UploadImage(bookModel);
+                    string folder = "books/cover/";
+                    bookModel.CoverImageUrl = await UploadImage(folder, bookModel.CoverPhoto);
                 }
+
+
+                if (bookModel.GalleryFiles != null)
+                {
+                    string folder = "books/gallery/";
+
+                    bookModel.Gallery = new List<GalleryModel>();
+                    
+                    foreach (var file in bookModel.GalleryFiles)
+                    {
+                        var gallery = new GalleryModel()
+                        {
+                            Name = file.Name,
+                            URL = await UploadImage(folder, file)
+                        };
+
+                        bookModel.Gallery.Add(gallery);
+                    }
+                }
+
+
+
+
+
+
+                //if (bookModel.CoverPhoto != null)
+                //{
+                //    string folder = "books/cover/";
+                //    folder += Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
+                //    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+
+                //    bookModel.CoverImageUrl = "/" + folder;
+
+                //    await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                //}
+
+
+
+
+
+
 
                 int id = await _bookRepository.AddNewBook(bookModel);
                 if (id > 0)
@@ -61,16 +116,9 @@ namespace banknote.Controllers
             return View();
         }
 
-        private async Task UploadImage(BookModel bookModel)
-        {
-            string folder = "books/cover/";
-            folder += Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
-            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
 
-            bookModel.CoverImageUrl = "/" + folder;
 
-            await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-        }
+        
 
         [Route("all-books")]
         public async Task<ViewResult> GetAllBooks()
@@ -91,6 +139,17 @@ namespace banknote.Controllers
         public List<BookModel> SearchBooks(string bookName, string authorName)
         {
             return _bookRepository.SearchBook(bookName, authorName);
+        }
+
+
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return "/" + folderPath;
         }
 
 

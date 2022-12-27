@@ -41,6 +41,7 @@ namespace banknote.Controllers
             ModelState.Remove(nameof(bookModel.Language));
             ModelState.Remove(nameof(bookModel.CoverImageUrl));
             ModelState.Remove(nameof(bookModel.Gallery));
+            ModelState.Remove(nameof(bookModel.BookPdfUrl));
 
 
             //if (ModelState.IsValid)
@@ -56,12 +57,24 @@ namespace banknote.Controllers
 
             if (ModelState.IsValid)
             {
+
+                //if (bookModel.CoverPhoto != null)
+                //{
+                //    string folder = "books/cover/";
+                //    folder += Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
+                //    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
+
+                //    bookModel.CoverImageUrl = "/" + folder;
+
+                //    await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+                //}
+
+
                 if (bookModel.CoverPhoto != null)
                 {
                     string folder = "books/cover/";
                     bookModel.CoverImageUrl = await UploadImage(folder, bookModel.CoverPhoto);
                 }
-
 
                 if (bookModel.GalleryFiles != null)
                 {
@@ -81,22 +94,11 @@ namespace banknote.Controllers
                     }
                 }
 
-
-
-
-
-
-                //if (bookModel.CoverPhoto != null)
-                //{
-                //    string folder = "books/cover/";
-                //    folder += Guid.NewGuid().ToString() + "_" + bookModel.CoverPhoto.FileName;
-                //    string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folder);
-
-                //    bookModel.CoverImageUrl = "/" + folder;
-
-                //    await bookModel.CoverPhoto.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-                //}
-
+                if (bookModel.BookPdf != null)
+                {
+                    string folder = "books/pdf/";
+                    bookModel.BookPdfUrl = await UploadPDF(folder, bookModel.BookPdf);
+                }
 
 
 
@@ -143,7 +145,30 @@ namespace banknote.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
         private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return "/" + folderPath;
+        }
+
+
+
+        private async Task<string> UploadPDF(string folderPath, IFormFile file)
         {
             folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
             string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);

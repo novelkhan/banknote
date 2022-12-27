@@ -28,8 +28,8 @@ namespace banknote.Repositories
                 TotalPages = model.TotalPages.HasValue ? model.TotalPages.Value : 0,
                 UpdatedOn = DateTime.UtcNow,
                 CoverImageUrl = model.CoverImageUrl,
-                Category = "Book"
-                //BookPdfUrl = model.BookPdfUrl
+                Category = "Book",
+                BookPdfUrl = model.BookPdfUrl
             };
 
             newBook.bookGallery = new List<BookGallery>();
@@ -109,26 +109,28 @@ namespace banknote.Repositories
 
         public async Task<BookModel> GetBookById(int id)
         {
-            //return await _context.Books.Where(x => x.Id == id)
-            //     .Select(book => new BookModel()
-            //     {
-            //         Author = book.Author,
-            //         Category = book.Category,
-            //         Description = book.Description,
-            //         Id = book.Id,
-            //         LanguageId = book.LanguageId,
-            //         Language = book.Language.Name,
-            //         Title = book.Title,
-            //         TotalPages = book.TotalPages,
-            //         //CoverImageUrl = book.CoverImageUrl,
-            //         //Gallery = book.bookGallery.Select(g => new GalleryModel()
-            //         //{
-            //         //    Id = g.Id,
-            //         //    Name = g.Name,
-            //         //    URL = g.URL
-            //         //}).ToList(),
-            //         //BookPdfUrl = book.BookPdfUrl
-            //     }).FirstOrDefaultAsync();
+            #pragma warning disable CS8603 // Possible null reference return.
+            return await _context.Books.Where(x => x.Id == id)
+                 .Select(book => new BookModel()
+                 {
+                     Author = book.Author,
+                     Category = book.Category,
+                     Description = book.Description,
+                     Id = book.Id,
+                     LanguageId = book.LanguageId,
+                     Language = book.Language.Name,
+                     Title = book.Title,
+                     TotalPages = book.TotalPages,
+                     CoverImageUrl = book.CoverImageUrl,
+                     Gallery = book.bookGallery.Select(g => new GalleryModel()
+                     {
+                         Id = g.Id,
+                         Name = g.Name,
+                         URL = g.URL
+                     }).ToList(),
+                     BookPdfUrl = book.BookPdfUrl
+                 }).FirstOrDefaultAsync();
+            #pragma warning restore CS8603 // Possible null reference return.
 
 
 
@@ -151,27 +153,49 @@ namespace banknote.Repositories
 
             //return null;
 
-            #pragma warning disable CS8603 // Possible null reference return.
-            return await _context.Books.Where(x => x.Id == id)
-                .Select(book => new BookModel()
-                {
-                    Author = book.Author,
-                    Category = book.Category,
-                    Description = book.Description,
-                    Title = book.Title,
-                    Id = book.Id,
-                    LanguageId = book.LanguageId,
-                    Language = book.Language.Name,
-                    TotalPages = book.TotalPages,
-                    CoverImageUrl = book.CoverImageUrl,
-                    Gallery = book.bookGallery.Select(g => new GalleryModel()
-                    {
-                        Id = g.Id,
-                        Name = g.Name,
-                        URL= g.URL
-                    }).ToList()
-                }).FirstOrDefaultAsync();
-                #pragma warning restore CS8603 // Possible null reference return.
+            //#pragma warning disable CS8603 // Possible null reference return.
+            //return await _context.Books.Where(x => x.Id == id)
+            //    .Select(book => new BookModel()
+            //    {
+            //        Author = book.Author,
+            //        Category = book.Category,
+            //        Description = book.Description,
+            //        Title = book.Title,
+            //        Id = book.Id,
+            //        LanguageId = book.LanguageId,
+            //        Language = book.Language.Name,
+            //        TotalPages = book.TotalPages,
+            //        CoverImageUrl = book.CoverImageUrl,
+            //        Gallery = book.bookGallery.Select(g => new GalleryModel()
+            //        {
+            //            Id = g.Id,
+            //            Name = g.Name,
+            //            URL= g.URL
+            //        }).ToList()
+            //    }).FirstOrDefaultAsync();
+            // #pragma warning restore CS8603 // Possible null reference return.
+
+
+            //return await _context.Books.Where(x => x.Id == id)
+            //     .Select(book => new BookModel()
+            //     {
+            //         Author = book.Author,
+            //         Category = book.Category,
+            //         Description = book.Description,
+            //         Id = book.Id,
+            //         LanguageId = book.LanguageId,
+            //         Language = book.Language.Name,
+            //         Title = book.Title,
+            //         TotalPages = book.TotalPages,
+            //         //CoverImageUrl = book.CoverImageUrl,
+            //         //Gallery = book.bookGallery.Select(g => new GalleryModel()
+            //         //{
+            //         //    Id = g.Id,
+            //         //    Name = g.Name,
+            //         //    URL = g.URL
+            //         //}).ToList(),
+            //         //BookPdfUrl = book.BookPdfUrl
+            //     }).FirstOrDefaultAsync();
         }
 
         public List<BookModel> SearchBook(string title, string authorName)
